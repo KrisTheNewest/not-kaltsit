@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1"
+  },
+  "name": "not-kaltsit",
+  "version": "1.0.0",
+  "description": "a discord bot for arknights endfield",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KrisTheNewest/not-kaltsit.git"
+  },
+  "keywords": [
+    "arknights",
+    "discord"
+  ],
+  "author": "krystina",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/KrisTheNewest/not-kaltsit/issues"
+  },
+  "homepage": "https://github.com/KrisTheNewest/not-kaltsit#readme"
+}
