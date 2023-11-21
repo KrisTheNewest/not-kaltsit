@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@discordjs/rest": "^2.2.0",
+    "discord-api-types": "^0.37.64",
     "discord.js": "^14.14.1",
     "dotenv": "^16.3.1"
   },
@@ -7,9 +9,8 @@
   "version": "1.0.0",
   "description": "a discord bot for arknights endfield",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/KrisTheNewest/not-kaltsit/issues"
   },
-  "homepage": "https://github.com/KrisTheNewest/not-kaltsit#readme"
+  "homepage": "https://github.com/KrisTheNewest/not-kaltsit#readme",
+  "devDependencies": {
+    "@types/node": "^20.9.2"
+  }
 }
