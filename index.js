@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits } = require("discord.js");
 const { readdir } = require('fs/promises');
 const register = require("./register.js");
-const twitter = require("./posters/twitterNews.js")
+const twitterNews = require("./posters/twitterNews.js")
 
 // TODO: POSSIBLY TURN THE COMMAND FILE INTO AN ARRAY
 // TODO: OR DO SOMETHING WITH THE NAMING SCHEME
@@ -27,7 +27,7 @@ client.once("ready", async (c) => {
 
 	const newsChannel = c.channels.cache.get(process.env.DEBUG_NEWS_CHANNEL);
 	setInterval(() => { 
-		twitter(newsChannel);
+		twitterNews(newsChannel);
 	}, 60 * 1000);
 	
 	console.log("Connected and ready!");

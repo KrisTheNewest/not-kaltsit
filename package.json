@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@discordjs/rest": "^2.2.0",
-    "@kristhenewest/grab-data": "^1.5.5",
+    "@kristhenewest/grab-data": "^1.7.2",
     "discord-api-types": "^0.37.64",
     "discord.js": "^14.14.1",
     "dotenv": "^16.3.1"
