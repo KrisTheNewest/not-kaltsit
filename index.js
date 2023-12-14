@@ -1,8 +1,9 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits } = require("discord.js");
+const { Client, GatewayIntentBits, ActivityType } = require("discord.js");
 const { readdir } = require('fs/promises');
 const register = require("./register.js");
-const twitterNews = require("./posters/twitterNews.js")
+
+const twitterNews    = require("./posters/twitterNews.js")
 
 // TODO: POSSIBLY TURN THE COMMAND FILE INTO AN ARRAY
 // TODO: OR DO SOMETHING WITH THE NAMING SCHEME
@@ -25,11 +26,11 @@ client.once("ready", async (c) => {
 		commandMap.set(commandInfo.name, command);
 	});
 
-	const newsChannel = c.channels.cache.get(process.env.DEBUG_NEWS_CHANNEL);
-	setInterval(() => { 
-		twitterNews(newsChannel);
+	setTimeout(() => { 
+		twitterNews(c);
 	}, 60 * 1000);
-	
+
+	c.user.setActivity({ name: "Vibing!", type: ActivityType.Custom, });
 	console.log("Connected and ready!");
 });
 

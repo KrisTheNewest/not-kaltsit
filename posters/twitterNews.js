@@ -6,10 +6,23 @@ const { twitterFeed } = require("@kristhenewest/grab-data");
 
 const token = require("../token.json");
 const startUpDate = new Date(require("../time.json"));
+const twitterHandles = require("../data/twitterHandles.js");
+
 const handleDateMap = new Map();
 
-module.exports = async function formatNews(channel) {
-	return twitterFeed("ArknightsEN", token, startUpDate, handleDateMap).then(posts => {
+const channels = [
+	{ handle: "AKEndfield",   channels: ["1169935597801054218"] },
+	{ handle: "AKEndfieldJP", channels: ["715985007637954592"]  },
+	{ handle: "AKEndfieldKR", channels: ["1170676278798602250"] },
+];
+
+// placeholder function to simulate queries
+async function queryDataBase(name) {
+	return channels.find(({ handle }) => handle === name);
+}
+
+async function getNews(name, token) {
+	return twitterFeed(name, token, startUpDate, handleDateMap).then(posts => {
 		const newposts = posts
 			.map(post => {
 				const { name, handle, url, avatar, } = post.fullProfile;
@@ -45,8 +58,24 @@ module.exports = async function formatNews(channel) {
 
 				return msg;
 			});
-		if (newposts.length) {
-			Promise.all(newposts.map(msg => channel.send(msg)));
-		}
+		return newposts;
 	});
+}
+
+module.exports = function pingTwitter(client) {
+	// TODO: THIS REQUIRES REFACTOR!!
+	twitterHandles.forEach(async (handle) => {
+		const news = await getNews(handle, token);
+		const { channels } = await queryDataBase(handle)
+		channels.forEach(channelId => client.channels.fetch(channelId)
+			.then(channel => {
+				if (!channel.guild.available) return;
+				// promise all helps with handling errors
+				// its all asynchronous AND will stop the loop in case of error
+				Promise.all(news.map(post => 
+					channel.send(post)
+				))
+			})
+		)
+	})
 }
