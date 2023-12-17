@@ -24,50 +24,48 @@ async function queryDataBase(name) {
 }
 
 async function getNews(name, token) {
-	return twitterFeed(name, token, startUpDate, handleDateMap).then(posts => {
-		const newposts = posts
-			.map(post => {
-				const { name, handle, url, avatar, } = post.fullProfile;
-				const { postUrl, postDate, postText, images, videoUrl, } = post;
+	return twitterFeed(name, token, startUpDate, handleDateMap).then(posts =>
+		posts.map(post => {
+			const { name, handle, url, avatar, } = post.fullProfile;
+			const { postUrl, postDate, postText, images, videoUrl, } = post;
 
-                const mainEmbed = new EmbedBuilder()
-					.setColor(TWITTERCOLOR)
-					.setAuthor({
-						name: `${name} @${handle}`,
-						url,
-						iconURL: avatar,
-					})
-					.setDescription(postText);
+			const mainEmbed = new EmbedBuilder()
+				.setColor(TWITTERCOLOR)
+				.setAuthor({
+					name: `${name} @${handle}`,
+					url,
+					iconURL: avatar,
+				})
+				.setDescription(postText);
 
-				const footie = new EmbedBuilder()
-					.setColor(TWITTERCOLOR)
-					.setFooter({
-						text: "Twitter",
-						iconURL: TWITTERICON 
-					})
-                	.setTimestamp(new Date(postDate));
+			const footie = new EmbedBuilder()
+				.setColor(TWITTERCOLOR)
+				.setFooter({
+					text: "Twitter",
+					iconURL: TWITTERICON 
+				})
+				.setTimestamp(new Date(postDate));
 
-				const allMsgs = [{ content: postUrl, embeds: [ mainEmbed ] }];
+			const allMsgs = [{ content: postUrl, embeds: [ mainEmbed ] }];
 
-				if (!videoUrl) {
-					const imageEmbeds = images.map(imgUrl => 
-						new EmbedBuilder()
-							.setColor(TWITTERCOLOR)
-							.setImage(imgUrl)
-							.setDescription(`[Open in browser...](${imgUrl})`)
-					);
-					allMsgs.at(0).embeds.push(...imageEmbeds, footie);
-				}
-				else {
-					allMsgs.push(
-						{ content: `[Open in browser...](${videoUrl})`}, 
-						{ embeds: [ footie ] }
-					)
-				}
-                return allMsgs;
-			});
-		return newposts;
-	});
+			if (!videoUrl) {
+				const imageEmbeds = images.map(imgUrl => 
+					new EmbedBuilder()
+						.setColor(TWITTERCOLOR)
+						.setImage(imgUrl)
+						.setDescription(`[Open in browser...](${imgUrl})`)
+				);
+				allMsgs.at(0).embeds.push(...imageEmbeds, footie);
+			}
+			else {
+				allMsgs.push(
+					{ content: `[Open in browser...](${videoUrl})`}, 
+					{ embeds: [ footie ] }
+				)
+			}
+			return allMsgs;
+		})
+	);
 }
 
 module.exports = function pingTwitter(client) {
