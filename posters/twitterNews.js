@@ -10,6 +10,8 @@ const twitterHandles = require("../data/twitterHandles.js");
 
 const handleDateMap = new Map();
 
+const TWITTERICON = "https://cdn.discordapp.com/attachments/411849480455979008/774980312286756904/twitter.png";
+const TWITTERCOLOR = "#246BCE";
 const channels = [
 	{ handle: "AKEndfield",   channels: ["1169935597801054218"] },
 	{ handle: "AKEndfieldJP", channels: ["715985007637954592"]  },
@@ -29,7 +31,7 @@ async function getNews(name, token) {
 				const { postUrl, postDate, postText, images, videoUrl, } = post;
 
                 const mainEmbed = new EmbedBuilder()
-					.setColor("Blurple")
+					.setColor(TWITTERCOLOR)
 					.setAuthor({
 						name: `${name} @${handle}`,
 						url,
@@ -38,10 +40,10 @@ async function getNews(name, token) {
 					.setDescription(postText);
 
 				const footie = new EmbedBuilder()
-					.setColor("Blurple")
+					.setColor(TWITTERCOLOR)
 					.setFooter({
 						text: "Twitter",
-						iconURL: "https://cdn.discordapp.com/attachments/411849480455979008/774980312286756904/twitter.png"
+						iconURL: TWITTERICON 
 					})
                 	.setTimestamp(new Date(postDate));
 
@@ -50,7 +52,7 @@ async function getNews(name, token) {
 				if (!videoUrl) {
 					const imageEmbeds = images.map(imgUrl => 
 						new EmbedBuilder()
-							.setColor("Blurple")
+							.setColor(TWITTERCOLOR)
 							.setImage(imgUrl)
 							.setDescription(`[Open in browser...](${imgUrl})`)
 					);
