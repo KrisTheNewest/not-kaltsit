@@ -28,35 +28,41 @@ async function getNews(name, token) {
 				const { name, handle, url, avatar, } = post.fullProfile;
 				const { postUrl, postDate, postText, images, videoUrl, } = post;
 
-				const msg = { content: postUrl, embeds: [] };
-
-				const embed = new EmbedBuilder()
-					.setAuthor({name: name + "@" + handle, iconURL: avatar, url})
-					.setDescription(postText)
+                const mainEmbed = new EmbedBuilder()
 					.setColor("Blurple")
-					.setTimestamp(new Date(postDate));
-				msg.embeds.push(embed);
+					.setAuthor({
+						name: `${name} @${handle}`,
+						url,
+						iconURL: avatar,
+					})
+					.setDescription(postText);
+
+				const footie = new EmbedBuilder()
+					.setColor("Blurple")
+					.setFooter({
+						text: "Twitter",
+						iconURL: "https://cdn.discordapp.com/attachments/411849480455979008/774980312286756904/twitter.png"
+					})
+                	.setTimestamp(new Date(postDate));
+
+				const allMsgs = [{ content: postUrl, embeds: [ mainEmbed ] }];
 
 				if (!videoUrl) {
 					const imageEmbeds = images.map(imgUrl => 
 						new EmbedBuilder()
 							.setColor("Blurple")
 							.setImage(imgUrl)
-							.setDescription(imgUrl)
+							.setDescription(`[Open in browser...](${imgUrl})`)
 					);
-					msg.embeds.push(...imageEmbeds);
+					allMsgs.at(0).embeds.push(...imageEmbeds, footie);
 				}
 				else {
-					embed.setImage(images.at(0));
+					allMsgs.push(
+						{ content: `[Open in browser...](${videoUrl})`}, 
+						{ embeds: [ footie ] }
+					)
 				}
-				msg.embeds.at(-1)
-					.setFooter({
-						"text": "Twitter",
-						iconURL: "https://media.discordapp.net/attachments/411849480455979008/774980312286756904/twitter.png"
-					})
-					.setTimestamp(new Date(postDate));
-
-				return msg;
+                return allMsgs;
 			});
 		return newposts;
 	});
@@ -73,7 +79,9 @@ module.exports = function pingTwitter(client) {
 				// promise all helps with handling errors
 				// its all asynchronous AND will stop the loop in case of error
 				Promise.all(news.map(post => 
-					channel.send(post)
+					Promise.all(
+						post.map((p) => channel.send(p))
+					)
 				))
 			})
 		)
