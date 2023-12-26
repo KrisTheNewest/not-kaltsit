@@ -5,7 +5,7 @@ const { EmbedBuilder } = require("discord.js");
 const { twitterFeed } = require("@kristhenewest/grab-data");
 
 const token = require("../token.json");
-const startUpDate = new Date(require("../time.json"));
+const startUpDate = new Date(require("../logs/time.json"));
 const twitterHandles = require("../data/twitterHandles.js");
 
 const handleDateMap = new Map();

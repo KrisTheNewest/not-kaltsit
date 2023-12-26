@@ -1,9 +1,10 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits, ActivityType } = require("discord.js");
-const { readdir } = require('fs/promises');
+const { readdir, writeFile } = require('fs/promises');
 
 const register = require("./register.js");
 const queryDataBase = require('./queryDataBase.js');
+const readableDate = require("./util/readableDate.js");
 
 const twitterNews = require("./posters/twitterNews.js");
 // TODO: WEIBO
@@ -38,9 +39,11 @@ client.once("ready", async (c) => {
 		});
 	});
 
-	setTimeout(() => { 
+	setInterval(() => {
 		twitterNews(c, cache);
-	}, 10 * 60 * 1000);
+		// save date to prevent reposts of old posts
+		writeFile("./logs/time.json", JSON.stringify(readableDate()));
+	}, 60 * 1000);
 
 	c.user.setActivity({ name: "Sending news from Twitter!", type: ActivityType.Custom, });
 	console.log("Connected and ready!");
@@ -50,6 +53,19 @@ client.on("interactionCreate", interaction => {
 	if (!interaction.isChatInputCommand()) return;
 	const command = commandMap.get(interaction.commandName);
 	command(interaction, cache);
+});
+
+process.on('SIGINT', async () => {
+	// pm2 fires this event before exit, allowing a graceful shutdown
+	try {
+		await writeFile("./logs/time.json", JSON.stringify(readableDate()));
+		await client.destroy();
+		process.exit(0);
+	}
+	catch (err) {
+		console.error(err);
+		process.exit(1);
+	}
 });
 
 client.login(process.env.DISCORD_TOKEN);

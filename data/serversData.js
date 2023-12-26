@@ -13,13 +13,13 @@ const data = [
 		AKEndfieldJP: "1175478794954473573",
 		AKEndfieldKR: "1175478866815500368",
 	},
-	// Debug Server
-	{ 
-		server: "585866109446782978",
-		AKEndfield: "118673078947651182",
-		AKEndfieldJP: "1186730789476511824",
-		AKEndfieldKR: "1186792861954494524",
-	},
+	// // Debug Server
+	// { 
+	// 	server: "585866109446782978",
+	// 	AKEndfield: "1169935597801054218",
+	// 	AKEndfieldJP: "715985007637954592",
+	// 	AKEndfieldKR: "1170676278798602250",
+	// },
 ];
 
 module.exports = data;
