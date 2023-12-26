@@ -11,6 +11,7 @@ const twitterNews = require("./posters/twitterNews.js");
 
 const client = new Client({ intents: [ GatewayIntentBits.Guilds ] });
 // TODO: DATABASE CONNECTION
+// TODO: DEBUG CHANNEL
 
 const commandMap = new Map();
 const cache = new Map();
@@ -29,8 +30,7 @@ client.once("ready", async (c) => {
 		commandMap.set(commandInfo.name, command);
 	});
 
-	const data = await queryDataBase()
-
+	const data = await queryDataBase();
 	data.forEach(({ server, /*botLang, gameLang*/ ...ids }) => {
 		const pairs = Object.entries(ids);
 		pairs.forEach(([name, id]) => {
@@ -43,7 +43,7 @@ client.once("ready", async (c) => {
 		twitterNews(c, cache);
 		// save date to prevent reposts of old posts
 		writeFile("./logs/time.json", JSON.stringify(readableDate()));
-	}, 60 * 1000);
+	}, 10 * 60 * 1000);
 
 	c.user.setActivity({ name: "Sending news from Twitter!", type: ActivityType.Custom, });
 	console.log("Connected and ready!");

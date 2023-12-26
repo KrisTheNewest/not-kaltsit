@@ -15,8 +15,8 @@ const TWITTERCOLOR = "#246BCE";
 
 async function getNews(name, token) {
 	return twitterFeed(name, token, startUpDate, handleDateMap).then(posts =>
-		posts.map(post => {
-			const { name, handle, url, avatar, } = post.fullProfile;
+		posts.map(({ fullProfile, ...post }) => {
+			const { name, handle, url, avatar, } = fullProfile;
 			const { postUrl, postDate, postText, images, videoUrl, } = post;
 
 			const mainEmbed = new EmbedBuilder()
@@ -60,7 +60,7 @@ async function getNews(name, token) {
 
 module.exports = async function pingTwitter(client, cache) {
 	twitterHandles.forEach(async (handle) => {
-		// errors are handles in the function
+		// errors are handled in the function
 		const news = await getNews(handle, token);
 		if (!news) return;
 
@@ -77,6 +77,7 @@ module.exports = async function pingTwitter(client, cache) {
 				));
 			}
 			catch ({ message, stack }) {
+				// TODO: proper error handling
 				console.log({ handle, id, message, stack });
 			}
 		})
