@@ -12,16 +12,6 @@ const handleDateMap = new Map();
 
 const TWITTERICON = "https://cdn.discordapp.com/attachments/411849480455979008/774980312286756904/twitter.png";
 const TWITTERCOLOR = "#246BCE";
-const channels = [
-	{ handle: "AKEndfield",   channels: ["1169935597801054218"] },
-	{ handle: "AKEndfieldJP", channels: ["715985007637954592"]  },
-	{ handle: "AKEndfieldKR", channels: ["1170676278798602250"] },
-];
-
-// placeholder function to simulate queries
-async function queryDataBase(name) {
-	return channels.find(({ handle }) => handle === name);
-}
 
 async function getNews(name, token) {
 	return twitterFeed(name, token, startUpDate, handleDateMap).then(posts =>
@@ -65,25 +55,30 @@ async function getNews(name, token) {
 			}
 			return allMsgs;
 		})
-	);
+	).catch(err => console.error(err))
 }
 
-module.exports = function pingTwitter(client) {
-	// TODO: THIS REQUIRES REFACTOR!!
+module.exports = async function pingTwitter(client, cache) {
 	twitterHandles.forEach(async (handle) => {
+		// errors are handles in the function
 		const news = await getNews(handle, token);
-		const { channels } = await queryDataBase(handle)
-		channels.forEach(channelId => client.channels.fetch(channelId)
-			.then(channel => {
-				if (!channel.guild.available) return;
-				// promise all helps with handling errors
-				// its all asynchronous AND will stop the loop in case of error
-				Promise.all(news.map(post => 
-					Promise.all(
-						post.map((p) => channel.send(p))
-					)
-				))
-			})
-		)
-	})
+		if (!news) return;
+
+		// just in case the cache is missing a map of specific channels
+		const channelIds = cache.get(handle) ?? [];
+		channelIds.forEach(async id => {
+			try {
+				const discordChannel = await client.channels.fetch(id);
+				// promise all "consolidates" errors
+				await Promise.all(news.map((post) =>
+					Promise.all(post.map((p) => 
+						discordChannel.send(p)
+					))
+				));
+			}
+			catch ({ message, stack }) {
+				console.log({ handle, id, message, stack });
+			}
+		})
+	});
 }
