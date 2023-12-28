@@ -26,7 +26,7 @@ async function getNews(name, token) {
 					url,
 					iconURL: avatar,
 				})
-				.setDescription(postText);
+				.setDescription(postText ?? "...");
 
 			const footie = new EmbedBuilder()
 				.setColor(TWITTERCOLOR)
@@ -71,7 +71,7 @@ module.exports = async function pingTwitter(client, cache) {
 				const discordChannel = await client.channels.fetch(id);
 				// promise all "consolidates" errors
 				await Promise.all(news.map((post) =>
-					Promise.all(post.map((p) => 
+					Promise.all(post.map((p) =>
 						discordChannel.send(p)
 					))
 				));
