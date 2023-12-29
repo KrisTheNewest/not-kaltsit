@@ -11,7 +11,8 @@
   "description": "a discord bot for arknights endfield",
   "main": "index.js",
   "scripts": {
-    "test": "node ./"
+    "test": "node ./",
+	"install": "mkdir -p logs && echo '\"'$(date +\"%F %T\")'\"' > ./logs/time.json"
   },
   "repository": {
     "type": "git",
