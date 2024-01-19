@@ -2,7 +2,7 @@ const data = [
 	// JP Server
 	{ 
 		server: "1166958619762368525",
-		AKEndfield: null,
+		AKEndfield: "1192097987669807214",
 		AKEndfieldJP: "1166966134059302922",
 		AKEndfieldKR: null,
 	},
